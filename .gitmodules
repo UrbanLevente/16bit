@@ -1,0 +1,9 @@
+[submodule "Sim/vendor/imgui"]
+	path = Sim/vendor/imgui
+	url = https://github.com/ocornut/imgui/
+[submodule "Sim/vendor/GLFW"]
+	path = Sim/vendor/GLFW
+	url = https://github.com/glfw/glfw
+[submodule "Sim/vendor/glm"]
+	path = Sim/vendor/glm
+	url = https://github.com/icaven/glm
