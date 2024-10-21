@@ -21,6 +21,8 @@ project "16bit"
 	{
 		"./",
 		"src",
+		"src/Simulator",
+		"src/Graphics",
 		"vendor",
 		"%{IncludeDirs.GLFW}",
 		"%{IncludeDirs.Glad}",

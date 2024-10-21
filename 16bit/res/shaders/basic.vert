@@ -10,10 +10,12 @@ out vec2 v_TexCoord;
 uniform float scale;
 
 uniform mat4 u_Model;
+uniform mat4 u_View;
+uniform mat4 u_Projection;
 uniform mat4 u_camMatrix;
 
 void main() {
-    gl_Position =  u_camMatrix * u_Model * vec4(position, 1.0);
+    gl_Position =  u_Projection * u_View * u_Model * vec4(position, 1.0);
     v_Color = color;
     v_TexCoord = texCoord;
 }
