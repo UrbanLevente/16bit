@@ -1,9 +1,14 @@
 #include <pch.h>
 
 #include "Renderer.h"
-
+#include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
+#include "VertexArray.h"
+#include "IndexBuffer.h"
+#include "Shader.h"
 #include "Texture.h"
+
+#include "CPU.h"
 
 #include "UI/RenderControls.h"
 
@@ -23,7 +28,7 @@
 		int windowWidth = 700;
 		int windowHeight = 700;
 
-		window = glfwCreateWindow(windowWidth, windowHeight, "Chernobyl Simulator", NULL, NULL);
+		window = glfwCreateWindow(windowWidth, windowHeight, "16 Bit CPU", NULL, NULL);
 		if (!window) {
 			std::cout << "[-] There was an error while creating the window\n";
 			glfwTerminate();
@@ -38,13 +43,6 @@
 		}
 		
 		{
-			glm::mat4 Model = glm::mat4(1.0f);
-			glm::mat4 View = glm::mat4(1.0f);
-			glm::mat4 Projection = glm::mat4(1.0f);
-
-			glm::vec3 Translation(0.0f, 0.0f, 0.0f);
-			glm::vec3 Rotation(0.0f, 0.0f, 0.0f);
-
 			float vertecies[] = {
 					// Positions       /  Texture coordiantes//
 				 -0.5f, -0.5f,                -0.5f, -0.5f,
@@ -80,10 +78,16 @@
 
 			Renderer renderer;
 
+			bool VSync = false;
+
+			int width, height = 0;
+
 			va.Unbind();
 			vb.Unbind();
 			ib.Unbind();
 			shader.Unbind();
+
+			CPU cpu;
 
 			ImGui::CreateContext();
 
@@ -93,14 +97,12 @@
 
 			ImGuiIO& io = ImGui::GetIO();
 
-			bool VSync = false;
-			
-			int width, height = 0;
-
 			while (!glfwWindowShouldClose(window)) {
 				
 				renderer.ClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 				GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+
+				cpu.Step(1);
 
 				GLCall(glfwSwapInterval((int)VSync));
 
@@ -117,17 +119,7 @@
 				glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 				glm::mat4 Projection = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, 0.0f, 1.0f);
 
-
-				{
-					
-					Model = glm::translate(glm::mat4(1.0f), Translation);
-					
-					shader.SetUniformMat4f("u_Model", Model);
-					shader.SetUniformMat4f("u_View", View);
-					shader.SetUniformMat4f("u_Projection", Projection);
-
-					renderer.Draw(va, ib, shader);
-				}
+				renderer.Draw(va, ib, shader);				
 
 				ImGui_ImplOpenGL3_NewFrame();
 				ImGui_ImplGlfw_NewFrame();
